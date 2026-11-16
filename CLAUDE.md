@@ -19,7 +19,8 @@ Este directorio es el **repo raíz** (paraguas): contiene el build compartido (`
 - Clonar todo: `git clone --recurse-submodules <url-raíz>`; en un clon existente, `git submodule update --init --recursive`.
 - Un cambio dentro de un submódulo se commitea y se sube **en el submódulo primero**; después, en el raíz, `git add <ruta>` + commit para mover el puntero. Si se sube el raíz sin haber subido el submódulo, los demás no podrán hacer checkout de ese commit.
 - Los submódulos no se compilan solos: dependen de `build-logic/` y `settings.gradle` del raíz. Construir siempre desde el raíz.
-- Para añadir un servicio nuevo como repo propio: `git submodule add <url> services/<nombre>` (settings lo descubre solo, ver Arquitectura).
+- Para añadir un servicio nuevo como repo propio: `git submodule add -b main <url> services/<nombre>` (settings lo descubre solo, ver Arquitectura). Si el directorio ya era un repo con su propio `.git/`, ejecutar después `git submodule absorbgitdirs <ruta>` para mover su historial a `.git/modules/` (así sobrevive a un `deinit`/`rm` del submódulo).
+- La URL de un submódulo vive en `.gitmodules` (compartido) y en `.git/config` (local). Para cambiarla: editar `.gitmodules` y ejecutar `git submodule sync <ruta>`; editar solo `.gitmodules` no basta.
 
 ## Comandos
 
@@ -53,6 +54,4 @@ Native Build Tools ignora los toolchains de Gradle: la compilación nativa usa e
 
 - Los tests `contextLoads` de `accounting` e `invoicing` fallan (`DataSourceBeanCreationException`): no hay `spring.datasource.url` ni base de datos de prueba. `./gradlew build` falla por eso; compilar y empaquetar sí funciona (`./gradlew assemble`).
 - Un servicio aplica `khipus.spring-boot-conventions`, no `khipus.spring-conventions` (sin el plugin de Boot no existen `bootJar`/`bootRun` ni la configuración `developmentOnly`).
-- Los servicios usan el paquete y group `com.kipus` (sin "h"); el resto del proyecto usa `com.khipus`.
-- Git: el repo raíz (rama `master`, sin commits ni remoto) aún no registra los submódulos; `libs`, `accounting` e `invoicing` son repos anidados con un commit en `main` ya subido a su remoto. `.gitmodules` está escrito a mano y tiene una entrada errónea (`third_submodule` → `path/to/third_submodule` en vez de `libs`).
 - Si un servicio combina springdoc + `khipus.native-conventions` sin actuator, la compilación AOT avisa de que falta `org.springframework.boot.actuate.autoconfigure.web.server.ManagementPortType` (springdoc usa `@ConditionalOnManagementPort`). Es inocuo; añadir `spring-boot-starter-actuator` al servicio debería eliminarlo (no verificado).
