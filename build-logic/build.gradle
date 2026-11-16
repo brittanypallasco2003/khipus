@@ -1,0 +1,13 @@
+plugins {
+    // Convierte cada src/main/groovy/<id>.gradle en un plugin con ese id.
+    id 'groovy-gradle-plugin'
+}
+
+// Única fuente de verdad para las versiones de los plugins externos.
+// Los proyectos aplican los plugins por id, sin versión.
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-gradle-plugin:4.1.2'
+    implementation 'io.spring.gradle:dependency-management-plugin:1.1.7'
+    // Versión alineada con la que gestiona Spring Boot 4.1.2 (native-build-tools-plugin.version).
+    implementation 'org.graalvm.buildtools:native-gradle-plugin:1.1.14'
+}

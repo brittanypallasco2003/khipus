@@ -1,0 +1,17 @@
+// Base para cualquier proyecto Java de Khipus.
+plugins {
+    id 'java'
+}
+
+group = 'com.khipus'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(25)
+    }
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
+}

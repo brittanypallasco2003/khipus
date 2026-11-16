@@ -1,0 +1,17 @@
+// Gestión de versiones de Spring (BOM de Spring Boot + Spring Cloud) SIN aplicar el plugin de Spring Boot.
+// Sirve para librerías que producen un jar plano y no un ejecutable.
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    id 'khipus.java-conventions'
+    id 'io.spring.dependency-management'
+}
+
+def springCloudVersion = '2025.1.4'
+
+dependencyManagement {
+    imports {
+        mavenBom SpringBootPlugin.BOM_COORDINATES
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}

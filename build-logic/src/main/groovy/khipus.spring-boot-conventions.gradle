@@ -1,0 +1,11 @@
+// Aplicación Spring Boot ejecutable (bootJar, bootRun, bootBuildImage).
+plugins {
+    id 'khipus.spring-conventions'
+    id 'org.springframework.boot'
+}
+
+// Un servicio recién creado bajo services/ todavía no tiene clase main; sin esto, bootJar rompe el build.
+tasks.named('bootJar') {
+    def mainSources = sourceSets.main.allSource
+    onlyIf('el proyecto tiene código fuente en src/main') { !mainSources.isEmpty() }
+}

@@ -1,0 +1,5 @@
+// Compilación a imagen nativa con GraalVM (nativeCompile, nativeTest).
+// Requiere ejecutar Gradle con un JDK GraalVM 25+: Native Build Tools ignora los toolchains.
+plugins {
+    id 'org.graalvm.buildtools.native'
+}

@@ -1,0 +1,31 @@
+pluginManagement {
+    // Hace disponibles los convention plugins (khipus.*) definidos en build-logic/.
+    includeBuild('build-logic')
+}
+
+dependencyResolutionManagement {
+    // Repositorios en un solo sitio; un build.gradle que declare los suyos hace fallar el build.
+    repositoriesMode = RepositoriesMode.FAIL_ON_PROJECT_REPOS
+    repositories {
+        mavenCentral()
+    }
+}
+
+rootProject.name = 'khipus'
+include 'libs'
+
+file('services').eachDir { dir ->
+    include dir.name
+    project(":${dir.name}").projectDir = dir
+
+    def buildFile = file("${dir.absolutePath}/build.gradle")
+    if (!buildFile.exists()) {
+        buildFile.text = """\
+plugins {
+    id 'khipus.spring-boot-conventions'
+}
+
+description = '${dir.name} module'
+""".stripIndent()
+    }
+}

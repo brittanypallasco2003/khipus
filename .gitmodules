@@ -1,0 +1,12 @@
+[submodule "libs"]
+	path = libs
+	url = https://github.com/brittanypallasco2003/khipus-libs.git
+	branch = main
+[submodule "services/invoicing"]
+	path = services/invoicing
+	url = https://github.com/brittanypallasco2003/khipus-invoicing.git
+	branch = main
+[submodule "services/accounting"]
+	path = services/accounting
+	url = https://github.com/brittanypallasco2003/khipus-accounting.git
+	branch = main
