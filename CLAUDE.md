@@ -19,8 +19,17 @@ Este directorio es el **repo raíz** (paraguas): contiene el build compartido (`
 - Clonar todo: `git clone --recurse-submodules <url-raíz>`; en un clon existente, `git submodule update --init --recursive`.
 - Un cambio dentro de un submódulo se commitea y se sube **en el submódulo primero**; después, en el raíz, `git add <ruta>` + commit para mover el puntero. Si se sube el raíz sin haber subido el submódulo, los demás no podrán hacer checkout de ese commit.
 - Los submódulos no se compilan solos: dependen de `build-logic/` y `settings.gradle` del raíz. Construir siempre desde el raíz.
-- Para añadir un servicio nuevo como repo propio: `git submodule add -b main <url> services/<nombre>` (settings lo descubre solo, ver Arquitectura). Si el directorio ya era un repo con su propio `.git/`, ejecutar después `git submodule absorbgitdirs <ruta>` para mover su historial a `.git/modules/` (así sobrevive a un `deinit`/`rm` del submódulo).
 - La URL de un submódulo vive en `.gitmodules` (compartido) y en `.git/config` (local). Para cambiarla: editar `.gitmodules` y ejecutar `git submodule sync <ruta>`; editar solo `.gitmodules` no basta.
+
+### Receta: añadir un servicio nuevo
+
+1. Crear el repo remoto **con al menos un commit** (p. ej. `gh repo create <owner>/khipus-<nombre> --private --add-readme`). `git submodule add` falla con un repo vacío.
+2. Desde el raíz: `git submodule add -b main <url> services/<nombre>`. Git lo clona con el historial ya en `.git/modules/` y escribe la URL en `.gitmodules` y `.git/config` a la vez. `settings.gradle` lo descubre solo (ver Arquitectura).
+3. Meter el código en `services/<nombre>/` (p. ej. el zip de Spring Initializr) y adaptarlo: `build.gradle` reducido a `id 'khipus.spring-boot-conventions'` + `description` + `dependencies`; borrar `gradlew`, `gradlew.bat` y `HELP.md`; paquete `com.khipus.<nombre>`. Comprobar con `./gradlew :<nombre>:assemble` desde el raíz.
+4. Commit y push **dentro** del submódulo.
+5. En el raíz: `git add .gitmodules services/<nombre>`, commit y push.
+
+No hacer `git init` dentro de `services/<nombre>/`. Si el código ya existe con su propio `.git/` dentro del raíz, después del `submodule add` hay que ejecutar `git submodule absorbgitdirs <ruta>` para mover el historial a `.git/modules/` (así sobrevive a un `deinit`/`rm`). Es más limpio hacer el `git init` y el push en una carpeta fuera del raíz y luego seguir desde el paso 2.
 
 ## Comandos
 
